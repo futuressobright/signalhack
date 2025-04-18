@@ -168,11 +168,18 @@ def get_karen_response():
         print(f"Error in get_karen_response: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
-@app.route('/save-recording', methods=['POST'])
-def save_recording():
-    # For MVP, we'll just acknowledge the recording
-    # In a real app, you'd save this for training
-    return jsonify({"status": "success", "message": "Recording saved!"})
+@app.route('/process-response', methods=['POST'])
+def process_response():
+    try:
+        # For MVP, we just acknowledge and respond
+        print("Got user's response, generating Karen's reply...")
+        return jsonify({
+            "status": "success",
+            "message": "Response processed"
+        })
+    except Exception as e:
+        print(f"Error processing response: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     if not ELEVENLABS_API_KEY:

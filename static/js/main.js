@@ -301,14 +301,17 @@ async function startRecording() {
             console.log('Recording stopped, processing...');
             recordingStatus.textContent = 'Processing your response...';
             
-            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-            
-            // Send recording to server
-            const formData = new FormData();
-            formData.append('audio', audioBlob);
-            formData.append('mood', moodSelect.value);
-            
             try {
+                // Stop all tracks
+                stream.getTracks().forEach(track => track.stop());
+                
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                
+                // Send recording to server
+                const formData = new FormData();
+                formData.append('audio', audioBlob);
+                formData.append('mood', moodSelect.value);
+                
                 const response = await fetch('/process-response', {
                     method: 'POST',
                     body: formData
@@ -322,6 +325,7 @@ async function startRecording() {
                 console.log('Server processed response:', data);
                 
                 // Get Karen's next response
+                callInProgress = false; // Reset state
                 await startCall();
             } catch (error) {
                 console.error('Error processing recording:', error);
@@ -330,8 +334,8 @@ async function startRecording() {
             }
         };
         
-        // Start recording
-        mediaRecorder.start();
+        // Request data immediately when starting
+        mediaRecorder.start(100); // Get data every 100ms
         console.log('Started recording');
         
         // Stop recording after 5 seconds
@@ -339,7 +343,6 @@ async function startRecording() {
             if (mediaRecorder && mediaRecorder.state === 'recording') {
                 console.log('Stopping recording after timeout');
                 mediaRecorder.stop();
-                stream.getTracks().forEach(track => track.stop());
             }
         }, 5000);
         
