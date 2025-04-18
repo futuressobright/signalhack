@@ -40,22 +40,45 @@ def generate_karen_response(mood, last_user_response, is_intro=False):
     # If we have a user response, generate a contextual response
     if last_user_response:
         if mood == 'angry':
-            # More natural, varied angry responses that don't just echo back
+            # More natural, varied angry responses with escalating anger
             angry_responses = [
-                "OH. MY. GOD. I cannot BELIEVE what I'm hearing! You people are COMPLETELY USELESS!",
-                "Are you SERIOUSLY trying to tell me that?! This is the WORST customer service I have EVER experienced!",
-                "I am literally SHAKING right now! Do you have ANY IDEA who I am?!",
-                "EXCUSE ME?! I've been a customer for 15 YEARS and THIS is how you treat me?!",
-                "This is RIDICULOUS! My CHILDREN could provide better service than this!",
-                "I am going to BLAST your company on EVERY social media platform! You'll be HEARING from my lawyer!",
-                "*SCREAMING* I want your manager's manager's MANAGER! RIGHT! NOW!",
-                "Oh, that's just PERFECT! Just PERFECT! I'm recording ALL of this for my YouTube channel!"
+                # Interrupting responses
+                "*interrupting* STOP RIGHT THERE! I've heard ENOUGH of your excuses!",
+                "*cutting you off* Oh NO NO NO! Don't you DARE try to explain this away!",
+                "*scoffs* I can't EVEN... Do you hear yourself right now?!",
+                
+                # Threatening responses
+                "You know what? I have the CEO's personal email! You'll be looking for a new job tomorrow!",
+                "My husband's brother's wife is a LAWYER! You're ALL going to regret this!",
+                "I have over 100,000 followers! One post from me will RUIN you!",
+                
+                # Personal attacks
+                "Did they hire you from a CIRCUS?! Because this is a complete CLOWN SHOW!",
+                "My DOG could do your job better! And I don't even HAVE a dog!",
+                "*voice shaking with rage* Are you even LISTENING to yourself?!",
+                
+                # Dramatic reactions
+                "*hyperventilating* I... I can't... I literally CAN'T with this right now!",
+                "*gasps dramatically* This is... this is BEYOND anything I've ever... I can't even PROCESS this!",
+                "*laughing hysterically* Oh this is RICH! Just RICH! Wait until my Facebook group hears about THIS!"
             ]
             return random.choice(angry_responses)
         elif mood == 'happy':
-            return f"Oh my stars! When you say '{last_user_response}' it just makes me so happy!"
+            happy_responses = [
+                "*giggles* Oh my goodness, you're just the SWEETEST thing! I could talk to you ALL day!",
+                "*delighted gasp* Finally! Someone who GETS IT! You're like a customer service ANGEL!",
+                "*happy squeal* This is exactly what I needed to hear! You're making my WHOLE WEEK!",
+                "*singing* La-la-LOVE your attitude! You should train EVERYONE here!"
+            ]
+            return random.choice(happy_responses)
         else:  # crazy
-            return f"'{last_user_response}'? That's EXACTLY what the lizard people told me you'd say!"
+            crazy_responses = [
+                "*whispers* The microwave in my kitchen told me you'd say that... it's never wrong!",
+                "*paranoid tone* Are you one of THEM? Quick, what's the secret handshake?!",
+                "*excited* YES! You're tuned into the same frequency as my tin foil hat!",
+                "*mysterious* The alignment of Jupiter's moons predicted this exact conversation..."
+            ]
+            return random.choice(crazy_responses)
     
     # Fallback responses if no user response
     fallbacks = {
@@ -98,24 +121,28 @@ def generate_karen_response(mood, last_user_response, is_intro=False):
 # Karen's voice settings for different moods
 voice_settings = {
     'angry': VoiceSettings(
-        stability=0.05,  # Even more unstable for extreme anger
-        similarity_boost=1.0,  # Maximum character similarity
-        style=1.0,
+        stability=0.15,  # More unstable for rage
+        similarity_boost=0.85,  # Keep character but allow variation
+        style=1.0,  # Full expressiveness
         use_speaker_boost=True,
-        speaking_rate=1.3,  # Even faster when angry
-        temperature=1.5  # Add more variation to the voice
+        speaking_rate=1.4,  # Even faster when angry
+        temperature=1.2  # More voice variation
     ),
     'happy': VoiceSettings(
-        stability=0.7,
+        stability=0.6,  # Bit unstable for excitement
         similarity_boost=0.75,
-        style=0.7,
-        use_speaker_boost=True
+        style=0.8,  # More expressive
+        use_speaker_boost=True,
+        speaking_rate=1.1,  # Slightly faster
+        temperature=0.9  # Some variation
     ),
     'crazy': VoiceSettings(
-        stability=0.1,
-        similarity_boost=0.75,
-        style=1.0,
-        use_speaker_boost=True
+        stability=0.2,  # Very unstable
+        similarity_boost=0.7,  # Allow more variation
+        style=1.0,  # Full expressiveness
+        use_speaker_boost=True,
+        speaking_rate=1.2,  # Faster for mania
+        temperature=1.3  # Lots of variation
     )
 }
 
