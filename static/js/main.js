@@ -83,9 +83,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Audio context for visualizer
-let audioContext;
-let analyser;
-let dataArray;
+let audioContext = null;
+let analyser = null;
+let dataArray = null;
 let visualizerCtx;
 
 // Initialize visualizer if available
@@ -106,7 +106,7 @@ function initializeVisualizer() {
 // Initialize after DOM is fully loaded
 document.addEventListener('DOMContentLoaded', initializeVisualizer);
 
-let mediaRecorder;
+let mediaRecorder = null;
 let audioChunks = [];
 let isRecording = false;
 let currentAudio = null;
@@ -181,6 +181,13 @@ async function startCall() {
         
         // Now set call in progress
         callInProgress = true;
+        
+        // Clear last response if this is a new call
+        if (!lastUserResponse) {
+            console.log('Starting new call');
+        } else {
+            console.log('Continuing conversation, last response:', lastUserResponse);
+        }
         // Get selected mood
         const mood = moodSelect.value;
         updateRageMeter(mood);
@@ -207,8 +214,8 @@ async function startCall() {
             },
             body: JSON.stringify({
                 mood: mood,
-                isIntro: true,
-                lastUserResponse: ''
+                isIntro: !lastUserResponse, // Only true for first response
+                lastUserResponse: lastUserResponse || ''
             })
         });
         
@@ -323,6 +330,10 @@ async function startRecording() {
                 
                 const data = await response.json();
                 console.log('Server processed response:', data);
+                
+                // Save user's response and continue conversation
+                lastUserResponse = 'User spoke for ' + (audioBlob.size / 1024).toFixed(1) + 'KB';
+                console.log('Saved response:', lastUserResponse);
                 
                 // Get Karen's next response
                 callInProgress = false; // Reset state
